@@ -105,8 +105,8 @@ $ brew install openconnect
 ```
 $ sudo openconnect \
               --protocol=anyconnect \
-              --user=igunduz \
-              --certificate=your-user.p12 \
+              --user=your-vpn-user \
+              --certificate=your-vpn-user.p12 \
               --no-dtls \
               https://<your server public ip address>
 
