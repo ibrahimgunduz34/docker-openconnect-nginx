@@ -93,3 +93,21 @@ $ curl -kv --cacert your-vpn-user-ca-cert.crt --cert your-vpn-user-client-cert.c
 
 ## How To Connect
 * You can connect the service using platform specific client applications. I'll edit this part later in detail.
+
+### Option 1 - OpenConnect:
+* Install openconnect client using homebrew
+```
+$ brew install openconnect
+```
+
+* Connect your vpn server using the client certificate previously created using the following command. **DO NOT FORGET TO REPLACE THE PCKS#12 CERTIFICATE FILENAME AND YOUR SERVER PUBLIC IP ADDRESS**
+
+```
+$ sudo openconnect \
+              --protocol=anyconnect \
+              --user=igunduz \
+              --certificate=your-user.p12 \
+              --no-dtls \
+              https://<your server public ip address>
+
+```
