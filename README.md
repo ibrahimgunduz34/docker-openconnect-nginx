@@ -22,7 +22,7 @@ docker run --name openconnect --privileged  -d \
               -v openconnect:/config \
               -p 443:443 \
               -p 443:443/udp \
-              -e SRV_CN=localhost \
+              -e SRV_CN=<your server public ip> \
               -e LISTEN_PORT=4443 \
               docker-openconnect-nginx:latest
 ```
