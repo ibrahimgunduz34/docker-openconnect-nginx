@@ -65,14 +65,11 @@ RUN buildDeps=" \
 RUN apk add --update bash rsync ipcalc sipcalc ca-certificates rsyslog logrotate runit \
     && rm -rf /var/cache/apk/* 
 
-RUN apk add nginx supervisor nginx-mod-stream openssl libseccomp lz4 lz4-dev
+RUN apk add nginx supervisor nginx-mod-stream openssl libseccomp lz4 lz4-dev vim tcpdump
 
-COPY nginx.conf /etc/nginx/nginx.conf
-
-
+COPY vpn.conf /etc/nginx/stream.d/vpn.conf
 COPY nginx-supervisor.ini /etc/supervisor.d/nginx-supervisor.ini
 COPY ocsrv-supervisor.ini /etc/supervisor.d/ocsrv-supervisor.ini
-COPY create-user /config/create-user
 
 RUN update-ca-certificates
 

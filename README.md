@@ -30,7 +30,7 @@ docker run --name openconnect --privileged  -d \
 * Create a new user
 ```
 $ docker exec -it openconnect sh
-$ export vpn_user=your-user
+$ export vpn_user=your-vpn-user
 $ export vpn_pass=your-vpn-pass 
 $ ocpasswd -c /config/ocpasswd $vpn_user
 ```
@@ -55,36 +55,36 @@ $ openssl pkcs12 -nodes -in /config/certs/${vpn_user}.p12 -out /config/certs/${v
 $ openssl pkcs12 -export -legacy -in /config/certs/${vpn_user}-legacy.pem -out /config/certs/${vpn_user}-legacy.p12 -password pass:$vpn_pass
 ```
 
-* Copy the client certificates from the container to the host to transfer anywhere you can copy to your device. **DO NOT FORGET TO RUN THE COMMAND ON THE HOST MACHINE AND REPLACE your-user text with your username**
+* Copy the client certificates from the container to the host to transfer anywhere you can copy to your device. **DO NOT FORGET TO RUN THE COMMAND ON THE HOST MACHINE AND REPLACE your-vpn-user text with your username**
 ```
-$ docker cp openconnect:/config/certs/your-user-legacy.p12 .
-$ docker cp openconnect:/config/certs/your-user.p12 .
+$ docker cp openconnect:/config/certs/your-vpn-user-legacy.p12 .
+$ docker cp openconnect:/config/certs/your-vpn-user.p12 .
 ```
 
 ## Testing the connection
 * Extract the client certificate from the PCKS#12 file.
 ```
-$ openssl pkcs12 -in your-user.p12 -clcerts -nokeys -out your-user-client-cert.crt
+$ openssl pkcs12 -in your-vpn-user.p12 -clcerts -nokeys -out your-vpn-user-client-cert.crt
 ```
 
 * Extract the key from the PCKS#12 file.
 ```
-$ openssl pkcs12 -in your-user.p12 -nocerts -out your-user-client-key.key
+$ openssl pkcs12 -in your-vpn-user.p12 -nocerts -out your-vpn-user-client-key.key
 ```
 
 * Optionally, you can remove the pass phrase from the key to make the test easier without using password
 ```
-$ openssl rsa -in your-user-client-key.key -out your-user-client-key.key
+$ openssl rsa -in your-vpn-user-client-key.key -out your-vpn-user-client-key.key
 ```
 
 * Extract CA certificate
 ```
-$ openssl pkcs12 -in your-user.p12 -cacerts -out your-user-ca-cert.crt
+$ openssl pkcs12 -in your-vpn-user.p12 -cacerts -out your-vpn-user-ca-cert.crt
 ```
 
-* Call the endpoint
+* Call the endpoint. **DO NOT FORGET TO REPLACE** `<your server public ip>` **text.**
 ```
-$ curl -kv --cacert your-user-ca-cert.crt --cert your-user-client-cert.crt --key your-user-client-key.key -s https://localhost  2>&1 | grep -E 'HTTP/1.1 200 OK'
+$ curl -kv --cacert your-vpn-user-ca-cert.crt --cert your-vpn-user-client-cert.crt --key your-vpn-user-client-key.key -s https://<your server public ip>  2>&1 | grep -E 'HTTP/1.1 200 OK'
 ```
 
 ## How To Connect
