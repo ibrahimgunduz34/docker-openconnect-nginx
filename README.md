@@ -22,7 +22,7 @@ docker run --name openconnect --privileged  -d \
               -v openconnect:/config \
               -p 443:443 \
               -p 443:443/udp \
-              -e SRV_CN=<your_server_public_ip> \
+              -e SRV_CN=localhost \
               -e LISTEN_PORT=4443 \
               docker-openconnect-nginx:latest
 ```
@@ -30,14 +30,13 @@ docker run --name openconnect --privileged  -d \
 * Create a new user
 ```
 $ docker exec -it openconnect sh
-$ ocpasswd -c /config/ocpasswd
+$ export vpn_user=your-user
+$ export vpn_pass=your-vpn-pass 
+$ ocpasswd -c /config/ocpasswd $vpn_user
 ```
 
 * Create a client certificate in the container
 ```
-export vpn_user=your-user
-export vpn_pass=your-vpn-pass 
-
 openssl req -newkey rsa:2048 -nodes -keyout /config/certs/$vpn_user.key -x509 -days 1095 -out /config/certs/$vpn_user.crt -subj "/C=UA/ST=Kyiv/L=Kyiv/O=MyVPN/OU=IT/CN=$vpn_user"
 ```
 
@@ -56,10 +55,37 @@ $ openssl pkcs12 -nodes -in /config/certs/${vpn_user}.p12 -out /config/certs/${v
 $ openssl pkcs12 -export -legacy -in /config/certs/${vpn_user}-legacy.pem -out /config/certs/${vpn_user}-legacy.p12 -password pass:$vpn_pass
 ```
 
-* Copy the client certificates from the container to the host to transfer anywhere you can copy to your device.
+* Copy the client certificates from the container to the host to transfer anywhere you can copy to your device. DO NOT FORGET TO RUN THE COMMAND ON THE HOST MACHINE AND REPLACE your-user text with your username
 ```
 $ docker cp openconnect:/config/certs/your-user-legacy.p12 .
 $ docker cp openconnect:/config/certs/your-user.p12 .
 ```
 
-* Connect to OpenConnect server using the certificate from the supported client applications. (I'll update this section for each platform)
+## Testing the connection
+* Extract the client certificate from the PCKS#12 file.
+```
+$ openssl pkcs12 -in your-user.p12 -clcerts -nokeys -out your-user-client-cert.crt
+```
+
+* Extract the key from the PCKS#12 file.
+```
+$ openssl pkcs12 -in your-user.p12 -nocerts -out your-user-client-key.key
+```
+
+* Optionally, you can remove the pass phrase from the key to make the test easier without using password
+```
+$ openssl rsa -in your-user-client-key.key -out your-user-client-key.key
+```
+
+* Extract CA certificate
+```
+$ openssl pkcs12 -in your-user.p12 -cacerts -out your-user-ca-cert.crt
+```
+
+* Call the endpoint
+```
+$ curl -kv --cacert your-user-ca-cert.crt --cert your-user-client-cert.crt --key your-user-client-key.key -s https://localhost  2>&1 | grep -E 'HTTP/1.1 200 OK'
+```
+
+## How To Connect
+* You can connect the service using platform specific client applications. I'll edit this part later in detail.
