@@ -16,7 +16,7 @@ $ docker build -t docker-openconnect-nginx:latest  -f Dockerfile .
 $ docker volume create openconnect
 ```
 
-* Run the server. *DO NOT FORGET TO REPLACE* `<your server public ip>` *text.*
+* Run the server. **DO NOT FORGET TO REPLACE** `<your server public ip>` **text.**
 ```
 docker run --name openconnect --privileged  -d \
               -v openconnect:/config \
@@ -55,7 +55,7 @@ $ openssl pkcs12 -nodes -in /config/certs/${vpn_user}.p12 -out /config/certs/${v
 $ openssl pkcs12 -export -legacy -in /config/certs/${vpn_user}-legacy.pem -out /config/certs/${vpn_user}-legacy.p12 -password pass:$vpn_pass
 ```
 
-* Copy the client certificates from the container to the host to transfer anywhere you can copy to your device. *DO NOT FORGET TO RUN THE COMMAND ON THE HOST MACHINE AND REPLACE your-user text with your username*
+* Copy the client certificates from the container to the host to transfer anywhere you can copy to your device. **DO NOT FORGET TO RUN THE COMMAND ON THE HOST MACHINE AND REPLACE your-user text with your username**
 ```
 $ docker cp openconnect:/config/certs/your-user-legacy.p12 .
 $ docker cp openconnect:/config/certs/your-user.p12 .
