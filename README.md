@@ -2,7 +2,7 @@
 
 Although it puts a separate layer in front of vpn server, it still does not obfusticate the traffic completely. The traffic still can be detected by the ISP depending on the level of DPI.
 
-You can decrease the visibility using different client solutions or add extra layers like obfsproxy after ocserv in your setup. As DPI detects VPN services by the pattern, do not just rely on having an SSL connection.
+You can decrease the visibility using different client solutions or adding extra layers like obfsproxy after ocserv in your setup. As DPI detects VPN services by the pattern, do not just rely on having an SSL connection.
 
 ## Credits
 * https://github.com/MarkusMcNugen/docker-openconnect
