@@ -67,28 +67,7 @@ RUN apk add --update bash rsync ipcalc sipcalc ca-certificates rsyslog logrotate
 
 RUN apk add nginx supervisor nginx-mod-stream openssl libseccomp lz4 lz4-dev
 
-RUN echo -e "load_module '/usr/lib/nginx/modules/ngx_stream_module.so';\n\
-worker_processes  1;\n\
-events {\n\
-    worker_connections  1024;\n\
-}\n\
-stream {\n\
-    # map $ssl_preread_server_name $backend {\n\
-    #     default ocserv_backend;\n\
-    #     51.15.81.76 web_backend;\n\
-    # }\n\
-    upstream ocserv_backend {\n\
-        server 127.0.0.1:4443;\n\
-    }\n\
-    upstream web_backend {\n\
-        server 127.0.0.1:8443;\n\
-    }\n\
-    server {\n\
-        listen 443 ssl;\n\
-        ssl_preread on;\n\
-        proxy_pass ocserv_backend;\n\
-    }\n\
-}" > /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
 
 COPY nginx-supervisor.ini /etc/supervisor.d/nginx-supervisor.ini
